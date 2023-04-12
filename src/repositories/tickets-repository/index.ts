@@ -1,11 +1,11 @@
-import { Prisma } from '@prisma/client';
+import { PrismaClient, Ticket, TicketType } from '@prisma/client';
 import { prisma } from '@/config';
 
 async function findAllTypes() {
   return prisma.ticketType.findMany();
 }
 
-async function findTicketsByUserId(id: number) {
+async function findOneByUserId(id: number) {
   return prisma.ticket.findFirst({
     where: {
       Enrollment: {
@@ -15,7 +15,7 @@ async function findTicketsByUserId(id: number) {
   });
 }
 
-async function create(ticket: Prisma.TicketCreateInput) {
+async function create(ticket: Omit<Ticket, 'id' | 'createdAt' | 'updatedAt'>) {
   return prisma.ticket.create({
     data: ticket,
   });
@@ -23,7 +23,7 @@ async function create(ticket: Prisma.TicketCreateInput) {
 
 const ticketsRepository = {
   findAllTypes,
-  findTicketsByUserId,
+  findOneByUserId,
   create,
 };
 
