@@ -15,3 +15,10 @@ async function createPayment(payment: Payment) {
   if (!paymentResult) throw notFoundError();
   return paymentResult;
 }
+
+const paymentsService = {
+  findFirst,
+  createPayment,
+};
+
+export default paymentsService;
