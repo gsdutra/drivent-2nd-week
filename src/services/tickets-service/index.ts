@@ -9,6 +9,7 @@ async function findAllTypes(): Promise<TicketType[]> {
 }
 
 async function getOneByUserId(userId: number): Promise<Ticket> {
+  await verifyEnrollment(userId);
   const ticket = await ticketsRepository.findOneByUserId(userId);
 
   if (!ticket) throw notFoundError();
@@ -16,12 +17,19 @@ async function getOneByUserId(userId: number): Promise<Ticket> {
   return ticket;
 }
 
-async function createTicket(ticket: Ticket): Promise<Ticket> {
+async function createTicket(ticket: Ticket, userId: number): Promise<Ticket> {
+  await verifyEnrollment(userId);
   const createdTicket = await ticketsRepository.create(ticket);
 
   if (!createdTicket) throw invalidDataError(['invalid ticket']);
 
   return createdTicket;
+}
+
+async function verifyEnrollment(userId: number) {
+  const verify = await ticketsRepository.verifyEnrollment(userId);
+  console.log(verify, verify === null, null);
+  if (verify === null) throw notFoundError();
 }
 
 const ticketsService = {

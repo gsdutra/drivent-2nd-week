@@ -21,10 +21,19 @@ async function create(ticket: Omit<Ticket, 'id' | 'createdAt' | 'updatedAt'>) {
   });
 }
 
+async function verifyEnrollment(id: number) {
+  return prisma.enrollment.findFirst({
+    where: {
+      userId: id,
+    },
+  });
+}
+
 const ticketsRepository = {
   findAllTypes,
   findOneByUserId,
   create,
+  verifyEnrollment,
 };
 
 export default ticketsRepository;
