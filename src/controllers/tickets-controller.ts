@@ -21,6 +21,7 @@ export async function getTicketByUser(req: AuthenticatedRequest, res: Response, 
 
     return res.status(httpStatus.OK).send(ticket);
   } catch (error) {
+    console.log(error.name);
     if (error.name === 'NotFoundError') return res.status(httpStatus.NOT_FOUND).send(error.message);
     return res.status(httpStatus.BAD_REQUEST).send(error.message);
   }
@@ -30,14 +31,9 @@ export async function postCreateTicket(req: AuthenticatedRequest, res: Response)
   const { userId } = req;
 
   try {
-    await ticketsService.createTicket(
-      {
-        ...req.body,
-      },
-      userId,
-    );
+    const createdTicket = await ticketsService.createTicket(userId, req.body.ticketTypeId);
 
-    return res.sendStatus(httpStatus.OK);
+    return res.status(httpStatus.CREATED).send(createdTicket);
   } catch (error) {
     if (error.name === 'NotFoundError') return res.status(httpStatus.NOT_FOUND).send(error.message);
     return res.status(httpStatus.BAD_REQUEST).send(error.message);

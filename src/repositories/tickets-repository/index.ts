@@ -6,19 +6,43 @@ async function findAllTypes() {
 }
 
 async function findOneByUserId(id: number) {
-  return prisma.ticket.findFirst({
+  const ticket = await prisma.ticket.findFirst({
     where: {
       Enrollment: {
         userId: id,
       },
     },
   });
+  const type = await prisma.ticketType.findUnique({
+    where: {
+      id: ticket.ticketTypeId,
+    },
+  });
+
+  return {
+    ...ticket,
+    TicketType: type,
+  };
 }
 
-async function create(ticket: Omit<Ticket, 'id' | 'createdAt' | 'updatedAt'>) {
-  return prisma.ticket.create({
-    data: ticket,
+async function create(ticketTypeId: number, enrollmentId: number) {
+  const ticket = await prisma.ticket.create({
+    data: {
+      ticketTypeId,
+      enrollmentId,
+      status: 'RESERVED',
+    },
   });
+  const type = await prisma.ticketType.findUnique({
+    where: {
+      id: ticketTypeId,
+    },
+  });
+
+  return {
+    ...ticket,
+    TicketType: type,
+  };
 }
 
 async function verifyEnrollment(id: number) {
