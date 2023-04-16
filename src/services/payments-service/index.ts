@@ -5,11 +5,14 @@ import { Payment, CardData } from '@/protocols';
 async function findFirst(ticketId: number, userId: number) {
   if (!ticketId) throw invalidDataError(['Ticket id is required']);
 
-  const payment = await paymentsRepository.findFirst(ticketId);
-  if (!payment) throw notFoundError();
+  const verifyTicketId = await paymentsRepository.verifyTicketId(ticketId);
+  if (!verifyTicketId) throw notFoundError();
 
   const verifyIfBelongsToUser = await paymentsRepository.verifyIfBelongsToUser(ticketId, userId);
   if (!verifyIfBelongsToUser) throw unauthorizedError();
+
+  const payment = await paymentsRepository.findFirst(ticketId);
+  if (!payment) throw notFoundError();
 
   return payment;
 }

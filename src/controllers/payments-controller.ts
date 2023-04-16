@@ -31,7 +31,7 @@ export async function postPayment(req: AuthenticatedRequest, res: Response) {
 
     return res.status(httpStatus.OK).send(payment);
   } catch (error) {
-    console.log(error.message);
+    // console.log(error.message);
     if (error.name === 'NoContent') return res.sendStatus(httpStatus.NO_CONTENT);
     if (error.name === 'InvalidDataError') return res.status(httpStatus.BAD_REQUEST).send(error.message);
     if (error.name === 'NotFoundError') return res.sendStatus(httpStatus.NOT_FOUND);
