@@ -13,6 +13,9 @@ async function findOneByUserId(id: number) {
       },
     },
   });
+
+  if (!ticket) return 0;
+
   const type = await prisma.ticketType.findUnique({
     where: {
       id: ticket.ticketTypeId,

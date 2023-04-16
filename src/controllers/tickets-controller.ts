@@ -21,9 +21,9 @@ export async function getTicketByUser(req: AuthenticatedRequest, res: Response, 
 
     return res.status(httpStatus.OK).send(ticket);
   } catch (error) {
-    console.log(error.name);
+    // console.log(error.message);
     if (error.name === 'NotFoundError') return res.status(httpStatus.NOT_FOUND).send(error.message);
-    return res.status(httpStatus.BAD_REQUEST).send(error.message);
+    return res.status(httpStatus.INTERNAL_SERVER_ERROR).send(error.message);
   }
 }
 
