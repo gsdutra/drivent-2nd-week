@@ -28,9 +28,9 @@ async function createTicket(userId: number, ticketTypeId: number): Promise<Ticke
 
 async function verifyEnrollment(userId: number) {
   const verify = await ticketsRepository.verifyEnrollment(userId);
-  console.log(verify, verify === null, null);
+  // console.log(verify, verify === null, null);
   if (verify === null) throw notFoundError();
-  console.log(verify);
+  // console.log(verify);
   return verify.id;
 }
 
