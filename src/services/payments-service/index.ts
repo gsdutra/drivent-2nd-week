@@ -4,10 +4,13 @@ import { Payment, CardData } from '@/protocols';
 
 async function findFirst(ticketId: number, userId: number) {
   if (!ticketId) throw invalidDataError(['Ticket id is required']);
+
   const payment = await paymentsRepository.findFirst(ticketId);
   if (!payment) throw notFoundError();
+
   const verifyIfBelongsToUser = await paymentsRepository.verifyIfBelongsToUser(ticketId, userId);
   if (!verifyIfBelongsToUser) throw unauthorizedError();
+
   return payment;
 }
 
@@ -26,7 +29,7 @@ async function createPayment(ticketId: number, userId: number, cardData: CardDat
   const cardLastDigits = String(cardData.number).slice(-4);
   const value = await paymentsRepository.findPrice(verifyTicketId.ticketTypeId);
 
-  const payment = await paymentsRepository.createPayment(ticketId, cardIssuer, cardLastDigits, Number(value));
+  const payment = await paymentsRepository.createPayment(ticketId, cardIssuer, cardLastDigits, Number(value.price));
 
   return payment;
 }

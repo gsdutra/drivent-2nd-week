@@ -24,13 +24,14 @@ export async function getPaymentByTicketId(req: AuthenticatedRequest, res: Respo
 
 export async function postPayment(req: AuthenticatedRequest, res: Response) {
   try {
-    const userId = req;
+    const { userId } = req;
     const { ticketId, cardData } = req.body;
 
     const payment = await paymentsService.createPayment(Number(ticketId), Number(userId), cardData);
 
     return res.status(httpStatus.OK).send(payment);
   } catch (error) {
+    console.log(error.message);
     if (error.name === 'NoContent') return res.sendStatus(httpStatus.NO_CONTENT);
     if (error.name === 'InvalidDataError') return res.status(httpStatus.BAD_REQUEST).send(error.message);
     if (error.name === 'NotFoundError') return res.sendStatus(httpStatus.NOT_FOUND);
