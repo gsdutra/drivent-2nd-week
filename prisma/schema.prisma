@@ -107,3 +107,22 @@ model Payment {
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
 }
+
+model Hotel {
+  id        Int      @id @default(autoincrement())
+  name      String
+  image     String
+  rooms     Room[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Room {
+  id        Int      @id @default(autoincrement())
+  name      String
+  capacity  Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  Hotel     Hotel   @relation(fields: [hotelId], references: [id])
+  hotelId   Int
+}
