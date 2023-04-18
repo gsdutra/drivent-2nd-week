@@ -5,9 +5,17 @@ import { AuthenticatedRequest } from '@/middlewares';
 import * as hotelsService from '@/services/hotels-service';
 
 export async function findAll(req: AuthenticatedRequest, res: Response) {
-  return 0;
+  try {
+    res.sendStatus(200);
+  } catch (error) {
+    res.status(httpStatus.INTERNAL_SERVER_ERROR).send(error.message);
+  }
 }
 
 export async function findById(req: AuthenticatedRequest, res: Response) {
-  return 0;
+  try {
+    res.sendStatus(200);
+  } catch (error) {
+    res.status(httpStatus.INTERNAL_SERVER_ERROR).send(error.message);
+  }
 }
