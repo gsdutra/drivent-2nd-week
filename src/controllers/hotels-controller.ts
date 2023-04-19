@@ -28,7 +28,7 @@ export async function findById(req: AuthenticatedRequest, res: Response) {
 
     const response = await hotelsService.findById(userId, Number(hotelId));
 
-    res.sendStatus(200);
+    res.status(httpStatus.OK).send(response);
   } catch (error) {
     if (error.name === 'NoContent') return res.sendStatus(httpStatus.NO_CONTENT);
     if (error.name === 'InvalidDataError') return res.status(httpStatus.BAD_REQUEST).send(error.message);
