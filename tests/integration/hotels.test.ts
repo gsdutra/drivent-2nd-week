@@ -12,6 +12,7 @@ import {
   createTicket,
   createPayment,
   generateCreditCardData,
+  createHotelWithRooms,
 } from '../factories';
 import app, { init } from '@/app';
 import { prisma } from '@/config';
@@ -55,7 +56,7 @@ describe('GET /hotels', () => {
       const user = await createUser();
       const token = await generateValidToken(user);
 
-      const response = await server.post('/hotels').set('Authorization', `Bearer ${token}`);
+      const response = await server.get('/hotels').set('Authorization', `Bearer ${token}`);
 
       expect(response.status).toBe(httpStatus.NOT_FOUND);
     });
@@ -65,7 +66,7 @@ describe('GET /hotels', () => {
       const enrollment = await createEnrollmentWithAddress(user);
       const ticketType = await createTicketType();
 
-      const response = await server.post('/hotels').set('Authorization', `Bearer ${token}`);
+      const response = await server.get('/hotels').set('Authorization', `Bearer ${token}`);
 
       expect(response.status).toBe(httpStatus.NOT_FOUND);
     });
@@ -77,7 +78,7 @@ describe('GET /hotels', () => {
 
       await createTicket(enrollment.id, ticketType.id, TicketStatus.RESERVED);
 
-      const response = await server.post('/hotels').set('Authorization', `Bearer ${token}`);
+      const response = await server.get('/hotels').set('Authorization', `Bearer ${token}`);
 
       expect(response.status).toBe(httpStatus.PAYMENT_REQUIRED);
     });
@@ -89,7 +90,7 @@ describe('GET /hotels', () => {
 
       await createTicket(enrollment.id, ticketType.id, TicketStatus.PAID);
 
-      const response = await server.post('/hotels').set('Authorization', `Bearer ${token}`);
+      const response = await server.get('/hotels').set('Authorization', `Bearer ${token}`);
 
       expect(response.status).toBe(httpStatus.PAYMENT_REQUIRED);
     });
@@ -101,7 +102,7 @@ describe('GET /hotels', () => {
 
       await createTicket(enrollment.id, ticketType.id, TicketStatus.PAID);
 
-      const response = await server.post('/hotels').set('Authorization', `Bearer ${token}`);
+      const response = await server.get('/hotels').set('Authorization', `Bearer ${token}`);
 
       expect(response.status).toBe(httpStatus.PAYMENT_REQUIRED);
     });
@@ -114,7 +115,9 @@ describe('GET /hotels', () => {
 
       await createTicket(enrollment.id, ticketType.id, TicketStatus.PAID);
 
-      const response = await server.post('/hotels').set('Authorization', `Bearer ${token}`);
+      await createHotelWithRooms();
+
+      const response = await server.get('/hotels').set('Authorization', `Bearer ${token}`);
 
       expect(response.status).toBe(httpStatus.OK);
 
@@ -157,7 +160,7 @@ describe('GET /hotels/hotelId', () => {
     expect(response.status).toBe(httpStatus.UNAUTHORIZED);
   });
 
-  describe('when token is valid', () => {
-    return 0;
-  });
+  //   describe('when token is valid', () => {
+  //     return 0;
+  //   });
 });
