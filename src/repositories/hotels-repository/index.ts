@@ -15,3 +15,16 @@ export async function getById(id: number) {
     },
   });
 }
+
+export async function verifyTicket(userId: number) {
+  return prisma.ticket.findFirst({
+    where: {
+      Enrollment: {
+        userId,
+      },
+    },
+    include: {
+      TicketType: true,
+    },
+  });
+}

@@ -16,6 +16,7 @@ export async function findAll(req: AuthenticatedRequest, res: Response) {
     if (error.name === 'InvalidDataError') return res.status(httpStatus.BAD_REQUEST).send(error.message);
     if (error.name === 'NotFoundError') return res.sendStatus(httpStatus.NOT_FOUND);
     if (error.name === 'UnauthorizedError') return res.sendStatus(httpStatus.UNAUTHORIZED);
+    if (error.name === 'PaymentRequiredError') return res.sendStatus(httpStatus.PAYMENT_REQUIRED);
     return res.status(httpStatus.INTERNAL_SERVER_ERROR).send(error.message);
   }
 }
@@ -33,6 +34,7 @@ export async function findById(req: AuthenticatedRequest, res: Response) {
     if (error.name === 'InvalidDataError') return res.status(httpStatus.BAD_REQUEST).send(error.message);
     if (error.name === 'NotFoundError') return res.sendStatus(httpStatus.NOT_FOUND);
     if (error.name === 'UnauthorizedError') return res.sendStatus(httpStatus.UNAUTHORIZED);
+    if (error.name === 'PaymentRequiredError') return res.sendStatus(httpStatus.PAYMENT_REQUIRED);
     return res.status(httpStatus.INTERNAL_SERVER_ERROR).send(error.message);
   }
 }
