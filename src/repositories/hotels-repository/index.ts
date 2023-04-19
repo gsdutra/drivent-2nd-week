@@ -2,9 +2,16 @@ import { PrismaClient } from '@prisma/client';
 import { prisma } from '@/config';
 
 export async function getAll() {
-  return 0;
+  return prisma.hotel.findMany({});
 }
 
 export async function getById(id: number) {
-  return id;
+  return prisma.hotel.findFirst({
+    where: {
+      id,
+    },
+    include: {
+      Rooms: true,
+    },
+  });
 }
