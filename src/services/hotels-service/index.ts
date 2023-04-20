@@ -14,6 +14,8 @@ export async function findAll(userId: number) {
 
   const hotels = await hotelsRepository.getAll();
 
+  if (hotels.length === 0) throw error.notFoundError();
+
   return hotels;
 }
 
@@ -29,6 +31,10 @@ export async function findById(userId: number, hotelId: number) {
     throw error.paymentRequiredError();
 
   const hotels = await hotelsRepository.getById(hotelId);
+
+  console.log(hotels);
+
+  if (!hotels) throw error.notFoundError();
 
   return hotels;
 }
