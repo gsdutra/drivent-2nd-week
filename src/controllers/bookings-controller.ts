@@ -1,10 +1,11 @@
-import { Response } from 'express';
+import { Response, NextFunction } from 'express';
 import httpStatus from 'http-status';
 import { AuthenticatedRequest } from '@/middlewares';
+import * as error from '@/errors';
 
 import * as bookingsService from '@/services/bookings-service';
 
-export async function getBooking(req: AuthenticatedRequest, res: Response) {
+export async function getBooking(req: AuthenticatedRequest, res: Response, next: NextFunction) {
   try {
     res.sendStatus(httpStatus.OK);
   } catch (error) {

@@ -1,8 +1,15 @@
 import { Request, Response } from 'express';
 import httpStatus from 'http-status';
+import { AuthenticatedRequest } from './authentication-middleware';
 import { ApplicationError } from '@/protocols';
 
-export function handleApplicationErrors(err: ApplicationError | Error, _req: Request, res: Response) {
+export function handleApplicationErrors(
+  err: ApplicationError | Error,
+  _req: Request | AuthenticatedRequest,
+  res: Response,
+) {
+  console.log('Erro');
+
   if (err.name === 'CannotEnrollBeforeStartDateError') {
     return res.status(httpStatus.BAD_REQUEST).send({
       message: err.message,
