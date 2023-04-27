@@ -234,19 +234,88 @@ describe('PUT /booking', () => {
 
   describe('When token is valid', () => {
     it('should return status 403 if user does not have a booking', async () => {
-      0;
+      const user = await factory.createUser();
+      const token = await generateValidToken(user);
+      const hotel = await factory.createHotelWithRooms();
+      const room = await factory.createRoom(hotel.id, 1);
+
+      const response = await server.put('/booking/0').set('Authorization', `Bearer ${token}`).send({
+        roomId: room.id,
+      });
+
+      expect(response.status).toBe(httpStatus.FORBIDDEN);
     });
 
     it('should return status 403 if the new room has no vacancies', async () => {
-      0;
+      const user = await factory.createUser();
+      const token = await generateValidToken(user);
+      const enrollment = await factory.createEnrollmentWithAddress(user);
+      const ticketType = await factory.createSpecificTicketType(false, true);
+      const hotel = await factory.createHotelWithRooms();
+      const roomOld = await factory.createRoom(hotel.id, 2);
+      const roomNew = await factory.createRoom(hotel.id, 0);
+
+      await factory.createTicket(enrollment.id, ticketType.id, TicketStatus.PAID);
+
+      const booking = await factory.createBooking(user.id, roomOld.id);
+
+      const response = await server
+        .put('/booking/' + String(booking.id))
+        .set('Authorization', `Bearer ${token}`)
+        .send({
+          roomId: roomNew.id,
+        });
+
+      expect(response.status).toBe(httpStatus.FORBIDDEN);
     });
 
     it('should return status 404 if the room does not exist', async () => {
-      0;
+      const user = await factory.createUser();
+      const token = await generateValidToken(user);
+      const enrollment = await factory.createEnrollmentWithAddress(user);
+      const ticketType = await factory.createSpecificTicketType(false, true);
+      const hotel = await factory.createHotelWithRooms();
+      const roomOld = await factory.createRoom(hotel.id, 2);
+      const roomNew = await factory.createRoom(hotel.id, 0);
+
+      await factory.createTicket(enrollment.id, ticketType.id, TicketStatus.PAID);
+
+      await factory.createBooking(user.id, roomOld.id);
+
+      const response = await server.put('/booking/0').set('Authorization', `Bearer ${token}`).send({
+        roomId: roomNew.id,
+      });
+
+      expect(response.status).toBe(httpStatus.FORBIDDEN);
     });
 
     it('should return status 200 with booking ID on success', async () => {
-      0;
+      const user = await factory.createUser();
+      const token = await generateValidToken(user);
+      const enrollment = await factory.createEnrollmentWithAddress(user);
+      const ticketType = await factory.createSpecificTicketType(false, true);
+      const hotel = await factory.createHotelWithRooms();
+      const roomOld = await factory.createRoom(hotel.id, 2);
+      const roomNew = await factory.createRoom(hotel.id, 1);
+
+      await factory.createTicket(enrollment.id, ticketType.id, TicketStatus.PAID);
+
+      const booking = await factory.createBooking(user.id, roomOld.id);
+
+      const response = await server
+        .put('/booking/' + String(booking.id))
+        .set('Authorization', `Bearer ${token}`)
+        .send({
+          roomId: roomNew.id,
+        });
+
+      expect(response.status).toBe(httpStatus.OK);
+
+      expect(response.body).toEqual(
+        expect.objectContaining({
+          bookingId: expect.any(Number),
+        }),
+      );
     });
   });
 });
