@@ -3,7 +3,7 @@ import supertest from 'supertest';
 import * as jwt from 'jsonwebtoken';
 import faker from '@faker-js/faker';
 import { createEvent } from '../factories';
-import { cleanDb } from '../helpers';
+import { cleanDb, generateValidToken } from '../helpers';
 import * as factory from '../factories';
 import app, { init } from '@/app';
 
@@ -39,12 +39,39 @@ describe('GET /booking', () => {
   });
 
   describe('When token is valid', () => {
-    it('should return status 404 if user does not have a booking', () => {
-      0;
+    it('should return status 404 if user does not have a booking', async () => {
+      const user = await factory.createUser();
+      const token = await generateValidToken(user);
+
+      const response = await server.get('/booking').set('Authorization', `Bearer ${token}`);
+
+      expect(response.status).toBe(httpStatus.NOT_FOUND);
     });
 
-    it('should return status 200 with booking data on success', () => {
-      0;
+    it('should return status 200 with booking data on success', async () => {
+      const user = await factory.createUser();
+      const token = await generateValidToken(user);
+      // const enrollment = await factory.createEnrollmentWithAddress(user);
+      // const ticketType = await factory.createSpecificTicketType(false, true);
+      const hotel = await factory.createHotelWithRooms();
+      const room = await factory.createRoom(hotel.id, 1);
+
+      await factory.createBooking(user.id, room.id);
+
+      const response = await server.get('/booking').set('Authorization', `Bearer ${token}`);
+
+      expect(response.status).toBe(httpStatus.OK);
+      expect(response.body).toEqual({
+        id: expect.any(Number),
+        Room: expect.objectContaining({
+          id: expect.any(Number),
+          name: expect.any(String),
+          capacity: expect.any(Number),
+          hotelId: expect.any(Number),
+          createdAt: expect.any(String),
+          updatedAt: expect.any(String),
+        }),
+      });
     });
   });
 });
