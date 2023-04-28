@@ -183,7 +183,7 @@ describe('POST /booking', () => {
       expect(response.status).toBe(httpStatus.NOT_FOUND);
     });
 
-    it('should return status 200 with booking ID on success', async () => {
+    it('should return status 201 with booking ID on success', async () => {
       const user = await factory.createUser();
       const token = await generateValidToken(user);
       const enrollment = await factory.createEnrollmentWithAddress(user);
@@ -197,7 +197,7 @@ describe('POST /booking', () => {
         roomId: room.id,
       });
 
-      expect(response.status).toBe(httpStatus.OK);
+      expect(response.status).toBe(httpStatus.CREATED);
 
       expect(response.body).toEqual(
         expect.objectContaining({
