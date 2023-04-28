@@ -152,14 +152,21 @@ describe('POST /booking', () => {
     });
 
     it('should return status 403 if the room has no vacancies', async () => {
+      const user1 = await factory.createUser();
+      const token1 = await generateValidToken(user1);
+      const enrollment1 = await factory.createEnrollmentWithAddress(user1);
+
       const user = await factory.createUser();
       const token = await generateValidToken(user);
       const enrollment = await factory.createEnrollmentWithAddress(user);
       const ticketType = await factory.createSpecificTicketType(false, true);
       const hotel = await factory.createHotelWithRooms();
-      const room = await factory.createRoom(hotel.id, 0);
+      const room = await factory.createRoom(hotel.id, 1);
 
+      await factory.createTicket(enrollment1.id, ticketType.id, TicketStatus.PAID);
       await factory.createTicket(enrollment.id, ticketType.id, TicketStatus.PAID);
+
+      await factory.createBooking(user1.id, room.id);
 
       const response = await server.post('/booking').set('Authorization', `Bearer ${token}`).send({
         roomId: room.id,
@@ -236,8 +243,11 @@ describe('PUT /booking', () => {
     it('should return status 403 if user does not have a booking', async () => {
       const user = await factory.createUser();
       const token = await generateValidToken(user);
+      const enrollment = await factory.createEnrollmentWithAddress(user);
+      const ticketType = await factory.createSpecificTicketType(false, true);
       const hotel = await factory.createHotelWithRooms();
       const room = await factory.createRoom(hotel.id, 1);
+      await factory.createTicket(enrollment.id, ticketType.id, TicketStatus.PAID);
 
       const response = await server.put('/booking/0').set('Authorization', `Bearer ${token}`).send({
         roomId: room.id,

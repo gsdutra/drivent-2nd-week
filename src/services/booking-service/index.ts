@@ -20,7 +20,11 @@ export async function createBooking(userId: number, roomId: number) {
   )
     throw error.forbiddenError();
 
-  //implementar no vacancies
+  const room = await bookingRepository.verifyRoom(roomId);
+  if (!room) throw error.notFoundError();
+
+  const verifyRoomAvailability = await bookingRepository.verifyRoomAvailability(roomId);
+  if (verifyRoomAvailability >= room.capacity) throw error.forbiddenError();
 
   const booking = await bookingRepository.createBooking(userId, roomId);
 
@@ -37,10 +41,13 @@ export async function updateBooking(userId: number, roomId: number, bookingId: n
   )
     throw error.forbiddenError();
 
-  //implementar no vacancies
+  const room = await bookingRepository.verifyRoom(roomId);
+  if (!room) throw error.notFoundError();
+
+  const verifyRoomAvailability = await bookingRepository.verifyRoomAvailability(roomId);
+  if (verifyRoomAvailability >= room.capacity) throw error.forbiddenError();
 
   const verifyBooking = await bookingRepository.verifyBooking(userId, bookingId);
-
   if (!verifyBooking) throw error.forbiddenError();
 
   const booking = await bookingRepository.updateBooking(userId, roomId, bookingId);

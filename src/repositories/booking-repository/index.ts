@@ -41,3 +41,19 @@ export async function verifyBooking(userId: number, bookingId: number) {
     },
   });
 }
+
+export async function verifyRoom(roomId: number) {
+  return await prisma.room.findUnique({
+    where: {
+      id: roomId,
+    },
+  });
+}
+
+export async function verifyRoomAvailability(roomId: number) {
+  return await prisma.booking.count({
+    where: {
+      roomId: roomId,
+    },
+  });
+}
