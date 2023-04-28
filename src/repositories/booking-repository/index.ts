@@ -32,3 +32,12 @@ export async function updateBooking(userId: number, roomId: number, bookingId: n
     },
   });
 }
+
+export async function verifyBooking(userId: number, bookingId: number) {
+  return await prisma.booking.findFirst({
+    where: {
+      id: bookingId,
+      userId,
+    },
+  });
+}

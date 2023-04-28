@@ -17,6 +17,7 @@ export async function getBooking(req: AuthenticatedRequest, res: Response, next:
     if (error.name === 'NotFoundError') return res.sendStatus(httpStatus.NOT_FOUND);
     if (error.name === 'UnauthorizedError') return res.sendStatus(httpStatus.UNAUTHORIZED);
     if (error.name === 'PaymentRequiredError') return res.sendStatus(httpStatus.PAYMENT_REQUIRED);
+    if (error.name === 'ForbiddenError') return res.sendStatus(httpStatus.FORBIDDEN);
     return res.status(httpStatus.INTERNAL_SERVER_ERROR).send(error.message);
   }
 }
@@ -35,6 +36,11 @@ export async function createBooking(req: AuthenticatedRequest, res: Response) {
     if (error.name === 'NotFoundError') return res.sendStatus(httpStatus.NOT_FOUND);
     if (error.name === 'UnauthorizedError') return res.sendStatus(httpStatus.UNAUTHORIZED);
     if (error.name === 'PaymentRequiredError') return res.sendStatus(httpStatus.PAYMENT_REQUIRED);
+    if (error.name === 'ForbiddenError') return res.sendStatus(httpStatus.FORBIDDEN);
+
+    console.log(error.name);
+    console.log(error.message);
+
     return res.status(httpStatus.INTERNAL_SERVER_ERROR).send(error.message);
   }
 }
@@ -54,6 +60,7 @@ export async function updateBooking(req: AuthenticatedRequest, res: Response) {
     if (error.name === 'NotFoundError') return res.sendStatus(httpStatus.NOT_FOUND);
     if (error.name === 'UnauthorizedError') return res.sendStatus(httpStatus.UNAUTHORIZED);
     if (error.name === 'PaymentRequiredError') return res.sendStatus(httpStatus.PAYMENT_REQUIRED);
+    if (error.name === 'ForbiddenError') return res.sendStatus(httpStatus.FORBIDDEN);
     return res.status(httpStatus.INTERNAL_SERVER_ERROR).send(error.message);
   }
 }

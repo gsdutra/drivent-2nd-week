@@ -32,7 +32,7 @@ export async function findById(userId: number, hotelId: number) {
 
   const hotels = await hotelsRepository.getById(hotelId);
 
-  console.log(hotels);
+  //console.log(hotels);
 
   if (!hotels) throw error.notFoundError();
 
