@@ -6,6 +6,9 @@ export async function getBooking(userId: number) {
     where: {
       userId: userId,
     },
+    include: {
+      Room: true,
+    },
   });
 }
 

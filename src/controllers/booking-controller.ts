@@ -3,7 +3,7 @@ import httpStatus from 'http-status';
 import { AuthenticatedRequest } from '@/middlewares';
 import * as error from '@/errors';
 
-import * as bookingsService from '@/services/bookings-service';
+import * as bookingsService from '@/services/booking-service';
 
 export async function getBooking(req: AuthenticatedRequest, res: Response, next: NextFunction) {
   try {
