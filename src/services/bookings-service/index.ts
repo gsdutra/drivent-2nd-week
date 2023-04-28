@@ -2,7 +2,11 @@ import * as bookingRepository from '@/repositories/booking-repository';
 import * as error from '@/errors';
 
 export async function getBooking(userId: number) {
-  return 0;
+  const booking = await bookingRepository.getBooking(userId);
+
+  if (!booking) throw error.notFoundError();
+
+  return booking;
 }
 
 export async function createBooking(userId: number, roomId: number) {
