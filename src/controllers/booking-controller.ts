@@ -29,7 +29,7 @@ export async function createBooking(req: AuthenticatedRequest, res: Response) {
 
     const response = await bookingsService.createBooking(userId, roomId);
 
-    res.status(httpStatus.CREATED).send({ bookingId: response });
+    res.status(httpStatus.OK).send({ bookingId: response });
   } catch (error) {
     if (error.name === 'NoContent') return res.sendStatus(httpStatus.NO_CONTENT);
     if (error.name === 'InvalidDataError') return res.status(httpStatus.BAD_REQUEST).send(error.message);

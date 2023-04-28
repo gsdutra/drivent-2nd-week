@@ -204,7 +204,7 @@ describe('POST /booking', () => {
         roomId: room.id,
       });
 
-      expect(response.status).toBe(httpStatus.CREATED);
+      expect(response.status).toBe(httpStatus.OK);
 
       expect(response.body).toEqual(
         expect.objectContaining({
