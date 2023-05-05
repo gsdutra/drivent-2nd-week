@@ -1,3 +1,4 @@
+import { Booking } from '@prisma/client';
 import * as bookingRepository from '@/repositories/booking-repository';
 import * as hotelsRepository from '@/repositories/hotels-repository';
 import * as error from '@/errors';
@@ -23,7 +24,7 @@ export async function createBooking(userId: number, roomId: number) {
   const room = await bookingRepository.verifyRoom(roomId);
   if (!room) throw error.notFoundError();
 
-  const verifyRoomAvailability = await bookingRepository.verifyRoomAvailability(roomId);
+  const verifyRoomAvailability: number = await bookingRepository.verifyRoomAvailability(roomId);
   if (verifyRoomAvailability >= room.capacity) throw error.forbiddenError();
 
   const booking = await bookingRepository.createBooking(userId, roomId);
@@ -50,7 +51,7 @@ export async function updateBooking(userId: number, roomId: number, bookingId: n
   const verifyBooking = await bookingRepository.verifyBooking(userId, bookingId);
   if (!verifyBooking) throw error.forbiddenError();
 
-  const booking = await bookingRepository.updateBooking(userId, roomId, bookingId);
+  const booking: Booking = await bookingRepository.updateBooking(userId, roomId, bookingId);
 
   return booking.id;
 }
